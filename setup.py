@@ -1,28 +1,18 @@
-from setuptools import setup, find_packages
+import setuptools
 
-with open('README.md') as readme_file:
-    README = readme_file.read()
+with open("README.md", "r") as fh:
+    README = fh.read()
 
-setup_args = dict(
-    name='elektra',
-    version='0.0.1',
-    description='Power block price creation and conversion',
-    long_description_content_type="text/markdown",
+setuptools.setup(
+    name="elektra",
+    version="0.0.2",
+    author="Molecule",
+    author_email="devs@molecule.io",
+    description="Power block price creation and conversion",
     long_description=README,
-    license='MIT',
-    packages=find_packages(),
-    author='Molecule',
-    author_email='devs@molecule.io',
-    keywords=['Power', 'Prices'],
+    long_description_content_type="text/markdown",
     url='https://github.com/wearemolecule/elektra',
-    download_url='https://pypi.org/project/elektra/'
+    packages=setuptools.find_packages(),
+    license='MIT',
+    python_requires='>=3.8',
 )
-
-install_requires = [
-    'python-dotenv',
-    'pandas',
-    'numpy'
-]
-
-if __name__ == '__main__':
-    setup(**setup_args, install_requires=install_requires)
