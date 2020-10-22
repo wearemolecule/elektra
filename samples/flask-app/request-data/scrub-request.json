@@ -1,0 +1,32 @@
+{
+    "flow_date": "2020-10-17",
+    "ticker": "M.YERX",
+    "node": "116013753",
+    "iso": "pjm",
+    "prices": [
+        {"flow_date":"2020-10-17","hour_ending":1.0, "price":20.548363},
+        {"flow_date":"2020-10-17","hour_ending":2.0, "price":18.853468},
+        {"flow_date":"2020-10-17","hour_ending":3.0, "price":8.003226},
+        {"flow_date":"2020-10-17","hour_ending":4.0, "price":17.955284},
+        {"flow_date":"2020-10-17","hour_ending":5.0, "price":18.258357},
+        {"flow_date":"2020-10-17","hour_ending":6.0, "price":19.219367},
+        {"flow_date":"2020-10-17","hour_ending":7.0, "price":21.444267},
+        {"flow_date":"2020-10-17","hour_ending":8.0, "price":25.334319},
+        {"flow_date":"2020-10-17","hour_ending":9.0, "price":23.945261},
+        {"flow_date":"2020-10-17","hour_ending":10.0, "price":22.925922},
+        {"flow_date":"2020-10-17","hour_ending":11.0, "price":21.284551},
+        {"flow_date":"2020-10-17","hour_ending":12.0, "price":19.289251},
+        {"flow_date":"2020-10-17","hour_ending":13.0, "price":17.767507},
+        {"flow_date":"2020-10-17","hour_ending":14.0, "price":17.076772},
+        {"flow_date":"2020-10-17","hour_ending":15.0, "price":16.778380},
+        {"flow_date":"2020-10-17","hour_ending":16.0, "price":16.721344},
+        {"flow_date":"2020-10-17","hour_ending":17.0, "price":17.280513},
+        {"flow_date":"2020-10-17","hour_ending":18.0, "price":18.348790},
+        {"flow_date":"2020-10-17","hour_ending":19.0, "price":22.649974},
+        {"flow_date":"2020-10-17","hour_ending":20.0, "price":24.864495},
+        {"flow_date":"2020-10-17","hour_ending":21.0, "price":20.812863},
+        {"flow_date":"2020-10-17","hour_ending":22.0, "price":18.200740},
+        {"flow_date":"2020-10-17","hour_ending":23.0, "price":16.823533},
+        {"flow_date":"2020-10-17","hour_ending":24.0, "price":16.397549}
+    ]
+}

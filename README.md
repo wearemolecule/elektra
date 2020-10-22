@@ -38,3 +38,7 @@ The response from the method is a Python dataframe with the following columns of
 * Required
 * Special
 * Value
+
+## Samples
+
+Included in the *samples* directory, there is an example flask application which utilizes `elektra` PIP package.
