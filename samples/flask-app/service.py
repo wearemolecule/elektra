@@ -1,6 +1,4 @@
-import json
 import os
-import requests
 import flask
 from flask import Flask, request, jsonify
 from flask.logging import create_logger
