@@ -4,7 +4,6 @@ from flask import Flask, request, jsonify
 from flask.logging import create_logger
 from dotenv import load_dotenv, find_dotenv
 from werkzeug.exceptions import HTTPException
-import functools
 from elektra import elektra
 from pandas import DataFrame as df
 import jsonschema
@@ -21,7 +20,6 @@ ENV_FILE = find_dotenv()
 if ENV_FILE:
   load_dotenv(ENV_FILE)
 
-@functools.lru_cache(maxsize=10)
 @app.route('/create', methods=['POST'])
 def create_prices():
   # get the request JSON data
@@ -48,7 +46,6 @@ def create_prices():
   }
   return jsonify(response), 200
 
-@functools.lru_cache(maxsize=10)
 @app.route('/scrub', methods=['POST'])
 def scrub_hourly_prices():
   # get the request JSON data
