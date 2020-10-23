@@ -8,7 +8,7 @@ create_prices = {
     "iso": {"type":"string"},
     "block": {"type":"string"},
     "frequency": {"type":"string"},
-    "prices": {
+    "data": {
       "type": "array",
       "properties": {
         "flow_date": {"type":"string"},
@@ -17,7 +17,7 @@ create_prices = {
       }
     }
   },
-  "required": ["flow_date", "ticker", "node", "iso", "block", "frequency", "prices"]
+  "required": ["flow_date", "ticker", "node", "iso", "block", "frequency", "data"]
 }
 
 scrub_prices = {
@@ -27,7 +27,7 @@ scrub_prices = {
     "ticker": {"type":"string"},
     "node": {"type":"string"},
     "iso": {"type":"string"},
-    "prices": {
+    "data": {
       "type": "array",
       "properties": {
         "flow_date": {"type":"string"},
@@ -36,5 +36,5 @@ scrub_prices = {
       }
     }
   },
-  "required": ["flow_date", "ticker", "node", "iso", "prices"]
+  "required": ["flow_date", "ticker", "node", "iso", "data"]
 }
