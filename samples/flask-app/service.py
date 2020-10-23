@@ -1,3 +1,4 @@
+import json
 import os
 import flask
 from flask import Flask, request, jsonify
@@ -37,7 +38,7 @@ def create_prices():
   frequency = request_data['frequency']
 
   # convert prices into a panda dataframe
-  prices = df(request_data['prices'])
+  prices = df(request_data['data'])
 
   # call elektra to get price
   elektra_response = elektra.create_prices(flow_date,ticker,node,iso,block,frequency,prices)
@@ -61,12 +62,12 @@ def scrub_hourly_prices():
   iso = request_data['iso']
 
   # convert prices into a panda dataframe
-  prices = df(request_data['prices'])
+  prices = df(request_data['data'])
 
   # call elektra to get price
   elektra_response = elektra.scrub_hourly_prices(flow_date,ticker,node,iso,prices)
-  response = elektra_response.to_csv(index=False)
-  return response, 200
+  response = elektra_response.to_json(orient='table', indent=2, index=False)
+  return json.loads(response), 200
 
 ## Exception Handling ##
 @app.errorhandler(HTTPException)

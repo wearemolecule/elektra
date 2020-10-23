@@ -5,7 +5,7 @@
     "iso": "miso",
     "block": "2x16",
     "frequency": "Daily",
-    "prices": [
+    "data": [
         {"flow_date":"2020-10-17","hour_ending":1.0, "price":26.48},
         {"flow_date":"2020-10-17","hour_ending":2.0, "price":20.35},
         {"flow_date":"2020-10-17","hour_ending":3.0, "price":17.19},
