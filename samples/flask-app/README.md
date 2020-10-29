@@ -6,5 +6,5 @@ Elektra service to provide block price conversion and price determination.  The 
 
 Two primary end-points:
 
-1. `/create` returns a price
-2. `/scrub` returns a csv
+1. `/create` returns json containing a single price
+2. `/scrub` returns json containing a collection of prices

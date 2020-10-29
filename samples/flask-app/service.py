@@ -40,7 +40,7 @@ def create_prices():
   # convert prices into a panda dataframe
   prices = df(request_data['data'])
 
-  # call elektra to get price
+  # call elektra to get a price
   elektra_response = elektra.create_prices(flow_date,ticker,node,iso,block,frequency,prices)
   response = {
     "price": elektra_response
@@ -64,7 +64,7 @@ def scrub_hourly_prices():
   # convert prices into a panda dataframe
   prices = df(request_data['data'])
 
-  # call elektra to get price
+  # call elektra to get a collection of prices
   elektra_response = elektra.scrub_hourly_prices(flow_date,ticker,node,iso,prices)
   response = elektra_response.to_json(orient='table', indent=2, index=False)
   return json.loads(response), 200
