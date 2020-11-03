@@ -4,11 +4,12 @@ Elektra is Molecule's core framework for block-logic (i.e., how to compute mwh f
 
 Elektra is in pre-release mode, which means that signatures may change over time as we evolve the project to 1.0. Submissions are welcome.
 
-There are three primary methods implemented in the elektra project, although many constructs and sub-functions are currently public.
+These are the primary methods implemented in the elektra project, although many constructs and sub-functions are currently public.
 
 * create_prices
 * scrub_hourly_prices
 * convert
+* translateBlocks
 
 ## Create Prices
 This method creates block prices, given hourly prices for a period of time and a handful of other parameters. A key function of this method is that it validates whether enough prices have been submitted to do the calculation. So, if the `block` is 5x16, but a price is missing for a Wednesday at 11 AM, an exception will be thrown. Daylight Savings Time is also contemplated.
@@ -55,7 +56,7 @@ The *convert* method takes the following parameters:
 * `input_block` -- (text: Wrap, 5x16, 2x16, 7x8, 7x16, 1x1) | The input block.
 * `output_block` -- (text: Wrap, 5x16, 2x16, 7x8, 7x16, 1x1) | The block for which we want to see hours.
 
-## TranslateBlocks (Alpha)
+## Translate Blocks (Alpha)
 Wrapper for `convert`, which adds the ability to convert a MW position for a term block (i.e., 7x24 monthly) to another block (or blocks) for that same term (i.e., 5x16, 2x16).
 
 The *translateBlocks* method takes the following parameters:
