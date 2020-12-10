@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="elektra",
-    version="0.0.2",
+    version="0.0.3",
     author="Molecule",
     author_email="devs@molecule.io",
     description="Power block price creation and conversion",
