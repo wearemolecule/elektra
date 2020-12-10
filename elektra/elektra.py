@@ -95,7 +95,7 @@ def is_offpeak_day(as_of):
     else:
         year_val = as_of.year
         holidays = get_nerc_holidays(year_val)
-        if as_of in holidays:
+        if as_of.replace(hour=0, minute=0, second=0) in holidays:
             return True
         else:
             return False
