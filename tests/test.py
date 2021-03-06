@@ -1,5 +1,5 @@
 import unittest
-from elektra import elektra
+import elektra
 import pandas as pd
 import filecmp
 import datetime as dt

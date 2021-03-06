@@ -1,6 +1,5 @@
 import json
 import os
-from dotenv import load_dotenv, find_dotenv
 import datetime as dt
 import calendar
 import pandas as pd
@@ -8,11 +7,6 @@ from pandas.tseries.holiday import AbstractHolidayCalendar, Holiday, sunday_to_m
     USMemorialDay, USLaborDay, USThanksgivingDay
 from enum import Enum
 import logging
-
-## get environment variables from the .env file, if one exists
-ENV_FILE = find_dotenv()
-if ENV_FILE:
-  load_dotenv(ENV_FILE)
 
 ## create the logger config
 log = logging.getLogger(__name__)
