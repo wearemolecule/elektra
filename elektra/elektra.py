@@ -313,10 +313,10 @@ def get_blocks(as_of):
 
 def get_iso_details(iso):
 
-    if(iso in [Iso.AESO, Iso.ISONE, Iso.NYISO, Iso.PJM]):
+    if(iso in [Iso.AESO, Iso.ISONE, Iso.NYISO, Iso.PJM, Iso.MISO]):
       first_peak_he = 8
       last_peak_he = 23
-    elif(iso in [Iso.ERCOT, Iso.MISO, Iso.SPP]):
+    elif(iso in [Iso.ERCOT, Iso.SPP]):
       first_peak_he = 7
       last_peak_he = 22
     else:

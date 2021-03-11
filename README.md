@@ -68,6 +68,3 @@ The *translateBlocks* method takes the following parameters:
 * `out_blocks` - *string array* | accepted values include 7x24, 5x16, Wrap, 2x16, 7x8
 * `out_uom` - *string* | Set to `MW` for a megawatt number. Default is `mwh`.
 
-## Samples
-
-Included in the *samples* directory, there is an example flask application which utilizes the `elektra` PIP package.
