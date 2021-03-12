@@ -16,8 +16,8 @@ In your python project, `import elektra` and use away. Usage examples are in `ex
 
 ## Methods
 
-We have documented the primary methods implemented in by Elektra, below. Other methods are available, but are undocumented.
-* [create_prices](#is_dst_transition): Creates block prices from raw LMP input
+These are the primary methods implemented in by Elektra. Other methods are available, but are undocumented.
+* [create_prices](#create_prices): Creates block prices from raw LMP input
 * [scrub_hourly_prices](#scrub_hourly_prices): Verifies that enough hourly LMPs are present
 * [convert](#convert): Converts hours in one block, to equivalent hours in another
 * [translate_blocks](#translate_blocks): Wraps [convert](#convert), and adds MW and/or MWh conversions
