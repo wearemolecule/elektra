@@ -1,17 +1,24 @@
-# elektra
+# Elektra
 
-Elektra is Molecule's core framework for block-logic (i.e., how to compute mwh from 5x16, 2x16, etc. blocks). It's derived from a set of our core logic internal to the Molecule application, and we're happy to share it with the world -- because nobody should ever have to fight with North American power block logic, ever, again.
+Elektra is Molecule's core framework for block logic (i.e., how to compute mwh from 5x16, 2x16, etc. blocks). It's derived from a set of our core logic internal to the Molecule application, and we're happy to share it with the world -- because nobody should ever have to fight with North American power blocks _ever_ again.
 
 Elektra is in pre-release mode, which means that signatures may change over time as we evolve the project to 1.0. Submissions are welcome.
 
-These are the primary methods implemented in the elektra project, although many constructs and sub-functions are currently public.
+We have documented the primary methods implemented in by Elektra, below. Other methods are available, but are undocumented.
 
-* create_prices
-* scrub_hourly_prices
-* convert
-* translateBlocks
+## Installing Elektra
 
-## Create Prices
+Either clone this repo, or use pip:
+
+> pip3 install elektra
+> 
+## Using Elektra
+
+In your python project, `import elektra` and use away. Usage examples are in `examples/examples.py`.
+
+## Methods
+
+### Create Prices
 This method creates block prices, given hourly prices for a period of time and a handful of other parameters. A key function of this method is that it validates whether enough prices have been submitted to do the calculation. So, if the `block` is 5x16, but a price is missing for a Wednesday at 11 AM, an exception will be thrown. Daylight Savings Time is also contemplated.
 
 The *create_prices* method takes the following parameters:
@@ -26,7 +33,22 @@ The *create_prices* method takes the following parameters:
 
 The response from the method is a single price *float* the provided attributes.
 
-## Scrub Hourly Prices
+#### Example
+``` python
+import elektra
+import pandas as pd
+import filecmp
+import datetime as dt
+
+flow_date = dt.datetime(2020, 10, 17)
+prices = pd.read_csv('lmps.csv')
+
+result = elektra.create_prices(flow_date, 'M.P4F8', 'INDIANA.HUB', 'miso', '2x16', 'Daily', prices)
+print(result)
+
+```
+
+### Scrub Hourly Prices
 This method validates that a submitted dataframe contains all the necessary hourly prices for a flow date, and returns a DataFrame with these prices. Daylight Savings Time (long-day and short-day) is contemplated.
 
 The *scrub_hourly_prices* method takes the following parameters:
@@ -45,7 +67,23 @@ The response from the method is a Pandas dataframe with the following columns of
 * Special
 * Value
 
-## Convert (Alpha)
+#### Example
+``` python
+import elektra
+import pandas as pd
+import filecmp
+import datetime as dt
+
+flow_date = dt.datetime(2020, 10, 17)
+prices = pd.read_csv('lmps.csv')
+
+result = elektra.scrub_hourly_prices(flow_date,'M.YERX', '116013753', 'pjm', prices)
+print(result)
+
+```
+
+
+### Convert
 Given a flow date and an input block (i.e., 5x16), this method returns the number of hours in another block.
 
 For example, if today is Wednesday, November 4, 2020, and I have a 7x24 block (24 hours), but I want to see how many 5x16 hours that implies -- I'll get 16. On the other hand, if today is Saturday, October 31, 2020, and I have a Wrap block (24 hours that day), that only implies 8 hours of 7x8. This is useful when trying to convert a position purchased in one block, to a volume of another block. It works in tandem with the TranslateBlocks method.
@@ -56,7 +94,22 @@ The *convert* method takes the following parameters:
 * `input_block` -- (text: Wrap, 5x16, 2x16, 7x8, 7x16, 1x1) | The input block.
 * `output_block` -- (text: Wrap, 5x16, 2x16, 7x8, 7x16, 1x1) | The block for which we want to see hours.
 
-## Translate Blocks (Alpha)
+#### Example
+``` python
+import elektra
+import datetime as dt
+
+flow_date = dt.datetime(2020, 10, 17)
+
+result = elektra.convert(flow_date, '7x24', '2x16') # 16: (October 17 2020 is a Saturday, and has 16 peak hours)
+
+result = elektra.convert(flow_date, '7x24', '5x16') # 0: (October 17 2020 is a Saturday, and has 0 weekday peak hours)
+
+result = elektra.convert(flow_date, '5x16', '2x16') # 0: (October 17 2020 is a Saturday, and there could not be a 5x16 input block)
+
+```
+
+### Translate Blocks
 Wrapper for `convert`, which adds the ability to convert a MW position for a term block (i.e., 7x24 monthly) to another block (or blocks) for that same term (i.e., 5x16, 2x16).
 
 The *translateBlocks* method takes the following parameters:
@@ -68,3 +121,33 @@ The *translateBlocks* method takes the following parameters:
 * `out_blocks` - *string array* | accepted values include 7x24, 5x16, Wrap, 2x16, 7x8
 * `out_uom` - *string* | Set to `MW` for a megawatt number. Default is `mwh`.
 
+#### Example
+``` python
+import elektra
+import datetime as dt
+
+flow_date = dt.datetime(2020, 10, 1)
+result = elektra.translateBlocks('pjm', 20, 'monthly', flow_date, '7x24', ['5x16', '2x16'], 'mwh')
+print(result)
+```
+
+### Is DST Transition?
+Responds with two variables that indicate whether the input date is the _short day_ of the year (i.e., spring DST transition day) or the _long day_ of the year (fall). If the date is neither, both variables are false.
+
+The method takes the following parameter:
+* `as_of` - *date* | The date to test
+
+The method returns the following parameters:
+* `short_day` - *boolean* | True, if the supplied date is the short day
+* `long_day` - * boolean* | True, if the supplied date is the long day
+
+#### Example
+``` python
+import elektra
+import datetime as dt
+flow_date = dt.datetime(2021, 3, 14)
+
+short_day, long_day = elektra.is_dst_transition(flow_date)
+print(short_day) # True; this is the sprint DST transition date
+print(long_day) # False; that would be the "fall back" date
+```
