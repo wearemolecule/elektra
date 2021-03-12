@@ -14,7 +14,7 @@ Either clone this repo, or use pip:
 > 
 ## Using Elektra
 
-In your python project, `import elektra` and use away. Usage examples are in `examples/examples.py`.
+In your python project, `import elektra` and use away. Usage examples are in `examples/examples.py`. A sample input CSV is there too. For the examples below, we will use that CSV. You can also use the table of data at the end of this file.
 
 ## Methods
 
@@ -151,3 +151,33 @@ short_day, long_day = elektra.is_dst_transition(flow_date)
 print(short_day) # True; this is the sprint DST transition date
 print(long_day) # False; that would be the "fall back" date
 ```
+
+## Sample Data
+This data is suitable for inputs to the hourly and block price converters:
+
+| flow_date  | hour_ending | price |
+|------------|-------------|-------|
+| 2020-10-17 | 1.0         | 26.48 |
+| 2020-10-17 | 2.0         | 20.35 |
+| 2020-10-17 | 3.0         | 17.19 |
+| 2020-10-17 | 4.0         | 17.16 |
+| 2020-10-17 | 5.0         | 20.28 |
+| 2020-10-17 | 6.0         | 34.25 |
+| 2020-10-17 | 7.0         | 21.24 |
+| 2020-10-17 | 8.0         | 23.67 |
+| 2020-10-17 | 9.0         | 22.37 |
+| 2020-10-17 | 10.0        | 20.81 |
+| 2020-10-17 | 11.0        | 21.10 |
+| 2020-10-17 | 12.0        | 19.28 |
+| 2020-10-17 | 13.0        | 18.94 |
+| 2020-10-17 | 14.0        | 18.07 |
+| 2020-10-17 | 15.0        | 19.43 |
+| 2020-10-17 | 16.0        | 18.94 |
+| 2020-10-17 | 17.0        | 18.85 |
+| 2020-10-17 | 18.0        | 22.40 |
+| 2020-10-17 | 19.0        | 60.50 |
+| 2020-10-17 | 20.0        | 19.12 |
+| 2020-10-17 | 21.0        | 20.36 |
+| 2020-10-17 | 22.0        | 19.39 |
+| 2020-10-17 | 23.0        | 17.67 |
+| 2020-10-17 | 24.0        | 17.55 |
