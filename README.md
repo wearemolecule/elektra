@@ -20,7 +20,7 @@ We have documented the primary methods implemented in by Elektra, below. Other m
 * [create_prices](#is_dst_transition): Creates block prices from raw LMP input
 * [scrub_hourly_prices](#scrub_hourly_prices): Verifies that enough hourly LMPs are present
 * [convert](#convert): Converts hours in one block, to equivalent hours in another
-* [translate_blocks](#translate_blocks): Wraps #convert, and adds MW and/or MWh conversions
+* [translate_blocks](#translate_blocks): Wraps [convert](#convert), and adds MW and/or MWh conversions
 * [is_dst_transition](#is_dst_transition): Determines if a date is a DST changeover day
 
 
