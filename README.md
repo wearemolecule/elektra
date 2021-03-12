@@ -31,7 +31,7 @@ The *create_prices* method takes the following parameters:
 * `frequency` *Elektra.Frequency* | The desired frequency for the output prices either Daily or Monthly
 * `prices` *DataFrame* | A Pandas dataframe of prices consisting of `flow_date`, `hour_ending`, and `price`
 
-The response from the method is a single price *float* the provided attributes.
+The response from the method is a single price (a *float*).
 
 #### Example
 ``` python
@@ -94,6 +94,8 @@ The *convert* method takes the following parameters:
 * `input_block` -- (text: Wrap, 5x16, 2x16, 7x8, 7x16, 1x1) | The input block.
 * `output_block` -- (text: Wrap, 5x16, 2x16, 7x8, 7x16, 1x1) | The block for which we want to see hours.
 
+The response from this method is an integer, representing the number of hours in the output block.
+
 #### Example
 ``` python
 import elektra
@@ -120,6 +122,8 @@ The *translateBlocks* method takes the following parameters:
 * `in_block` - *string* | 7x24, 5x16, Wrap, 2x16, 7x8
 * `out_blocks` - *string array* | accepted values include 7x24, 5x16, Wrap, 2x16, 7x8
 * `out_uom` - *string* | Set to `MW` for a megawatt number. Default is `mwh`.
+
+The response from this method is a DataFrame with one column for flow date, and an additional column representing the number of MW, or MWh, in each `out_block`.
 
 #### Example
 ``` python
