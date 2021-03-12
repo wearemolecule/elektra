@@ -26,7 +26,7 @@ The *create_prices* method takes the following parameters:
 * `flow_date` - *date* | The as of date for the power prices (i.e., the settlement/reporting date needed)
 * `ticker` - *string* | The ticker symbol for the power product (Molecule ticker; used for identification, not calculation)
 * `node` - *string* | The node on the power grid (used for identification, not calculation)
-* `iso` - *Elektra.Iso* | The name of the Independent Service Operator
+* `iso` - *Elektra.Iso* | The name of the Independent System Operator (ISO). Acceptable ISOs are listed in the enum. CA-ISO is not currently supported.
 * `block` - *Elektra.Block* | The desired power block for the output prices
 * `frequency` *Elektra.Frequency* | The desired frequency for the output prices either Daily or Monthly
 * `prices` *DataFrame* | A Pandas dataframe of prices consisting of `flow_date`, `hour_ending`, and `price`
