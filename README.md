@@ -2,7 +2,7 @@
 
 Elektra is Molecule's core framework for block logic (i.e., how to compute mwh from 5x16, 2x16, etc. blocks). It's derived from a set of logic internal to the Molecule application, and we're happy to share it with the world -- because nobody should ever have to fight with North American power blocks _ever_ again.
 
-Elektra is in pre-release mode, which means that signatures may change over time as we evolve the project to 1.0. Submissions are welcome.
+Elektra is in pre-release, which means that signatures may change over time as we evolve the project to 1.0. Submissions are welcome; just submit a pull request with your change.
 
 ## Installing Elektra
 
