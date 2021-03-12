@@ -1,6 +1,6 @@
 # Elektra
 
-Elektra is Molecule's core framework for block logic (i.e., how to compute mwh from 5x16, 2x16, etc. blocks). It's derived from a set of our core logic internal to the Molecule application, and we're happy to share it with the world -- because nobody should ever have to fight with North American power blocks _ever_ again.
+Elektra is Molecule's core framework for block logic (i.e., how to compute mwh from 5x16, 2x16, etc. blocks). It's derived from a set of logic internal to the Molecule application, and we're happy to share it with the world -- because nobody should ever have to fight with North American power blocks _ever_ again.
 
 Elektra is in pre-release mode, which means that signatures may change over time as we evolve the project to 1.0. Submissions are welcome.
 
@@ -43,7 +43,7 @@ import datetime as dt
 flow_date = dt.datetime(2020, 10, 17)
 prices = pd.read_csv('lmps.csv')
 
-result = elektra.create_prices(flow_date, 'M.P4F8', 'INDIANA.HUB', 'miso', '2x16', 'Daily', prices)
+result = elektra.create_prices(flow_date, 'M.XXXX', 'INDIANA.HUB', 'miso', '2x16', 'Daily', prices)
 print(result)
 
 ```
@@ -56,7 +56,7 @@ The *scrub_hourly_prices* method takes the following parameters:
 * `flow_date` - *date* | The as of date for the power prices (i.e., the settlement/reporting date needed)
 * `ticker` - *string* | The ticker symbol for the power product (Molecule ticker; used for identification, not calculation)
 * `node` - *string* | The node on the power grid (used for identification, not calculation)
-* `iso` - *Elektra.Iso* | The name of the Independent Service Operator
+* `iso` - *Elektra.Iso* | The name of the Independent System Operator (ISO). Acceptable ISOs are listed in the enum. CA-ISO is not currently supported.
 * `prices` *DataFrame* | A Pandas dataframe of prices consisting of `flow_date`, `hour_ending`, and `price`
 
 The response from the method is a Pandas dataframe with the following columns of data:
@@ -77,7 +77,7 @@ import datetime as dt
 flow_date = dt.datetime(2020, 10, 17)
 prices = pd.read_csv('lmps.csv')
 
-result = elektra.scrub_hourly_prices(flow_date,'M.YERX', '116013753', 'pjm', prices)
+result = elektra.scrub_hourly_prices(flow_date,'M.XXXX', '116013753', 'pjm', prices)
 print(result)
 
 ```
@@ -104,9 +104,7 @@ import datetime as dt
 flow_date = dt.datetime(2020, 10, 17)
 
 result = elektra.convert(flow_date, '7x24', '2x16') # 16: (October 17 2020 is a Saturday, and has 16 peak hours)
-
 result = elektra.convert(flow_date, '7x24', '5x16') # 0: (October 17 2020 is a Saturday, and has 0 weekday peak hours)
-
 result = elektra.convert(flow_date, '5x16', '2x16') # 0: (October 17 2020 is a Saturday, and there could not be a 5x16 input block)
 
 ```
@@ -115,7 +113,7 @@ result = elektra.convert(flow_date, '5x16', '2x16') # 0: (October 17 2020 is a S
 Wrapper for `convert`, which adds the ability to convert a MW position for a term block (i.e., 7x24 monthly) to another block (or blocks) for that same term (i.e., 5x16, 2x16).
 
 The *translateBlocks* method takes the following parameters:
-* `iso` - *string* | The short name of the Independent Service Operator (Elektra.Iso). This is not currently used, so beware when using for CAISO.
+* `iso` - *string* | The short name of the Independent System Operator (Elektra.Iso). This is not currently used, so beware when using for CAISO.
 * `mw` - *decimal* | The number of megawatts on the input block to be used for mw/mwh computation
 * `frequency` - *text* | monthly, daily, or hourly. Currently only monthly is implemented.
 * `contract_start` *date* | The first flow date of the block. This method will compute the last flow date.
