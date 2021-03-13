@@ -153,7 +153,7 @@ print(result)
 ```
 
 ### is_dst_transition
-Responds with two variables that indicate whether the input date is the _short day_ of the year (i.e., spring DST transition day) or the _long day_ of the year (fall). If the date is neither, both variables are false.
+Responds with variables that indicate whether the input date is a DST transition day, and whether it is the _short day_ of the year (i.e., spring DST transition day) or the _long day_ of the year (fall). If the date is not the transition day, the short- and long- day returns are False.
 
 The method takes the following parameter:
 * `as_of` - *date* | The date to test
