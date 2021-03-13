@@ -1,3 +1,5 @@
+[![PyPI version](https://badge.fury.io/py/elektra.svg)](https://badge.fury.io/py/elektra)
+
 # Elektra
 
 Elektra is Molecule's core framework for block logic (i.e., how to compute mwh from 5x16, 2x16, etc. blocks). It's derived from a set of logic internal to the Molecule application, and we're happy to share it with the world -- because nobody should ever have to fight with North American power blocks _ever_ again.
