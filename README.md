@@ -14,6 +14,15 @@ Either clone this repo, or use pip:
 
 In your python project, `import elektra` and use away. Usage examples are in `examples/examples.py`. A sample input CSV is there too. For the examples below, we will use that CSV. You can also use the table of data at the end of this file.
 
+
+## Parameters
+
+Internally, Elektra uses enums for ISO, Block, and Frequency. String inputs for these fields are converted to the enum when Elektra runs, and so must be provided in the exact format the Enum expects.
+
+1. `iso`: permitted values are `miso`, `isone`, `ercot`, `pjm`, `spp`, `aeso`, `nyiso`, `caiso`
+2. `block`: permitted values are `7x8`, `5x16`, `2x16`, `7x24`, `7x16`, `1x1`, `wrap`
+3. `frequency`: permitted values are `daily`, `monthly`, `hourly`
+
 ## Methods
 
 These are the primary methods available in Elektra. Other methods are available, but are undocumented.
@@ -32,9 +41,9 @@ The *create_prices* method takes the following parameters:
 * `flow_date` - *date* | The as of date for the power prices (i.e., the settlement/reporting date needed)
 * `ticker` - *string* | The ticker symbol for the power product (Molecule ticker; used for identification, not calculation)
 * `node` - *string* | The node on the power grid (used for identification, not calculation)
-* `iso` - *Elektra.Iso* | The name of the Independent System Operator (ISO). Acceptable ISOs are listed in the enum. CA-ISO is not currently supported.
-* `block` - *Elektra.Block* | The desired power block for the output prices
-* `frequency` *Elektra.Frequency* | The desired frequency for the output prices either Daily or Monthly
+* `iso` - *string* | The name of the Independent System Operator (ISO). Acceptable ISOs are listed in the enum. CA-ISO is not currently supported.
+* `block` - *string* | The desired power block for the output prices
+* `frequency` *string* | The desired frequency for the output prices either Daily or Monthly
 * `prices` *DataFrame* | A Pandas dataframe of prices consisting of `flow_date`, `hour_ending`, and `price`
 
 The response from the method is a single floating-point price.
@@ -49,7 +58,7 @@ import datetime as dt
 flow_date = dt.datetime(2020, 10, 17)
 prices = pd.read_csv('lmps.csv')
 
-result = elektra.create_prices(flow_date, 'M.XXXX', 'INDIANA.HUB', 'miso', '2x16', 'Daily', prices)
+result = elektra.create_prices(flow_date, 'M.XXXX', 'INDIANA.HUB', 'miso', '2x16', 'daily', prices)
 print(result)
 
 ```
@@ -62,7 +71,7 @@ The *scrub_hourly_prices* method takes the following parameters:
 * `flow_date` - *date* | The as of date for the power prices (i.e., the settlement/reporting date needed)
 * `ticker` - *string* | The ticker symbol for the power product (Molecule ticker; used for identification, not calculation)
 * `node` - *string* | The node on the power grid (used for identification, not calculation)
-* `iso` - *Elektra.Iso* | The name of the Independent System Operator (ISO). Acceptable ISOs are listed in the enum. CA-ISO is not currently supported.
+* `iso` - *string* | The name of the Independent System Operator (ISO). Acceptable ISOs are listed in the enum. CA-ISO is not currently supported.
 * `prices` *DataFrame* | A Pandas dataframe of prices consisting of `flow_date`, `hour_ending`, and `price`
 
 The response from the method is a Pandas dataframe with the following columns of data:
@@ -83,7 +92,7 @@ import datetime as dt
 flow_date = dt.datetime(2020, 10, 17)
 prices = pd.read_csv('lmps.csv')
 
-result = elektra.scrub_hourly_prices(flow_date,'M.XXXX', '116013753', 'pjm', prices)
+result = elektra.scrub_hourly_prices(flow_date, 'M.XXXX', '116013753', 'pjm', prices)
 print(result)
 
 ```
@@ -121,7 +130,7 @@ Wrapper for `convert`, which adds the ability to convert a MW position for a ter
 The *translateBlocks* method takes the following parameters:
 * `iso` - *string* | The short name of the Independent System Operator (Elektra.Iso). This is not currently used, so beware when using for CAISO.
 * `mw` - *decimal* | The number of megawatts on the input block to be used for mw/mwh computation
-* `frequency` - *text* | monthly, daily, or hourly. Currently only monthly is implemented.
+* `frequency` - *string* | monthly, daily, or hourly. Currently only monthly is implemented.
 * `contract_start` *date* | The first flow date of the block. This method will compute the last flow date.
 * `in_block` - *string* | 7x24, 5x16, Wrap, 2x16, 7x8
 * `out_blocks` - *string array* | accepted values include 7x24, 5x16, Wrap, 2x16, 7x8
@@ -148,6 +157,7 @@ The method takes the following parameter:
 * `as_of` - *date* | The date to test
 
 The method returns the following parameters:
+* `is_tx` - *boolean* | True, if the supplied date is one of the two yearly transition days
 * `short_day` - *boolean* | True, if the supplied date is the short day
 * `long_day` - *boolean* | True, if the supplied date is the long day
 
@@ -157,7 +167,8 @@ import elektra
 import datetime as dt
 flow_date = dt.datetime(2021, 3, 14)
 
-short_day, long_day = elektra.is_dst_transition(flow_date)
+is_tx, short_day, long_day = elektra.is_dst_transition(flow_date)
+print(is_tx) # True; this is one of the transition dates
 print(short_day) # True; this is the sprint DST transition date
 print(long_day) # False; that would be the "fall back" date
 ```
