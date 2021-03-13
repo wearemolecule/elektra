@@ -8,8 +8,8 @@ flow_date = dt.datetime(2020, 10, 17)
 ### Create Prices (make a daily from lmps)
 print('\n\n--- Create Block Prices ---')
 prices = pd.read_csv('lmps.csv')
-#result = elektra.create_prices(dt.datetime.strptime('2020-10-17','%Y-%m-%d'),'M.P4F8', 'INDIANA.HUB', elektra.Iso.MISO, elektra.Block._2x16, 'Daily', prices)
-result = elektra.create_prices(flow_date, 'M.P4F8', 'INDIANA.HUB', 'miso', '2x16', 'Daily', prices)
+
+result = elektra.create_prices(flow_date, 'M.P4F8', 'INDIANA.HUB', 'miso', '2x16', 'daily', prices)
 print(result)
 
 #### Scrub Hourly Prices (make sure there are enough houlies)
@@ -38,6 +38,7 @@ print(result)
 print('\n\n--- DST Transition ---')
 flow_date = dt.datetime(2021, 3, 14)
 
-short_day, long_day = elektra.is_dst_transition(flow_date)
+is_tx, short_day, long_day = elektra.is_dst_transition(flow_date)
+print(is_tx) # True; this is one of the transition dates
 print(short_day) # True; this is the sprint DST transition date
 print(long_day) # False; that would be the "fall back" date
