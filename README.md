@@ -171,7 +171,7 @@ flow_date = dt.datetime(2021, 3, 14)
 
 is_tx, short_day, long_day = elektra.is_dst_transition(flow_date)
 print(is_tx) # True; this is one of the transition dates
-print(short_day) # True; this is the sprint DST transition date
+print(short_day) # True; this is the spring DST transition date
 print(long_day) # False; that would be the "fall back" date
 ```
 
