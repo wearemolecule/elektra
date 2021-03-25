@@ -10,14 +10,13 @@ from pandas.tseries.holiday import AbstractHolidayCalendar, Holiday, sunday_to_m
 from pytz import timezone
 from dateutil import tz
 
-
-## create the logger config
+# create the logger config
 log = logging.getLogger(__name__)
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"),
                     format='"%(asctime)s — %(name)s — %(levelname)s — %(funcName)s:%(lineno)d — %(message)s"')
 
 
-## CLASS DEFINITIONS BEGIN##
+# CLASS DEFINITIONS BEGIN##
 class Iso(Enum):
     MISO = 'miso'
     ISONE = 'isone'
@@ -69,7 +68,7 @@ class NERCHolidayCalendar(AbstractHolidayCalendar):
     ]
 
 
-## CLASS DEFINITIONS END##
+# CLASS DEFINITIONS END##
 
 # Static holder for NERC holiday calendar
 nhcal = {}
@@ -119,12 +118,12 @@ def is_dst_transition(as_of):
     transition_dates = [d.date() for d in tz._utc_transition_times]
 
     is_tx = False
-    if (as_of.date() in transition_dates):
+    if as_of.date() in transition_dates:
         is_tx = True
         # log.debug('DST!' + as_of.strftime("%m/%d/%Y"))
 
-    short_day = True if (as_of.month == 3 and is_tx == True) else False
-    long_day = True if (as_of.month == 11 and is_tx == True) else False
+    short_day = True if (as_of.month == 3 and is_tx) else False
+    long_day = True if (as_of.month == 11 and is_tx) else False
 
     return is_tx, short_day, long_day
 
@@ -133,9 +132,9 @@ def adjust_dst(as_of, mwh):
     # Is today a UTC transition date?
     is_tx, short_day, long_day = is_dst_transition(as_of)
 
-    if (short_day == True):
+    if short_day:
         return mwh - 1
-    elif (long_day == True):
+    elif long_day:
         return mwh + 1
     else:
         return mwh
@@ -151,59 +150,59 @@ def convert(flow_dt, input_block, output_block):
 
     mwh = 0
     # 5x16
-    if (input_block == '5x16' and output_block in ['5x16', '7x24']):
+    if input_block == '5x16' and output_block in ['5x16', '7x24']:
         mwh = 16 if is_peak else 0
-    elif (input_block == '5x16' and output_block in ['2x16', '7x8', 'Wrap']):
+    elif input_block == '5x16' and output_block in ['2x16', '7x8', 'Wrap']:
         mwh = 0
     # Wrap
-    elif (input_block == 'Wrap' and output_block in ['Wrap', '7x24']):
+    elif input_block == 'Wrap' and output_block in ['Wrap', '7x24']:
         mwh = 8 if is_peak else adjust_dst(flow_dt, 24)  # DST Check
-    elif (input_block == 'Wrap' and output_block == '5x16'):
+    elif input_block == 'Wrap' and output_block == '5x16':
         mwh = 0
-    elif (input_block == 'Wrap' and output_block == '7x8'):
+    elif input_block == 'Wrap' and output_block == '7x8':
         mwh = 8 if is_peak else adjust_dst(flow_dt, 8)  # DST Check
-    elif (input_block == 'Wrap' and output_block == '2x16'):
+    elif input_block == 'Wrap' and output_block == '2x16':
         mwh = 16 if is_weekend else 0
     # 7x24
-    elif (input_block == '7x24' and output_block == '7x24'):
+    elif input_block == '7x24' and output_block == '7x24':
         mwh = adjust_dst(flow_dt, 24)  # DST Check
-    elif (input_block == '7x24' and output_block == '5x16'):
+    elif input_block == '7x24' and output_block == '5x16':
         mwh = 16 if is_peak else 0
-    elif (input_block == '7x24' and output_block == '2x16'):
+    elif input_block == '7x24' and output_block == '2x16':
         mwh = 16 if is_weekend else 0
-    elif (input_block == '7x24' and output_block == '7x8'):
+    elif input_block == '7x24' and output_block == '7x8':
         mwh = adjust_dst(flow_dt, 8) if not is_peak else 8  # DST Check
-    elif (input_block == '7x24' and output_block == 'Wrap'):
+    elif input_block == '7x24' and output_block == 'Wrap':
         mwh = adjust_dst(flow_dt, 24) if is_weekend else 8  # DST Check
     # 2x16
-    elif (input_block == '2x16' and output_block in ['5x16', '7x8']):
+    elif input_block == '2x16' and output_block in ['5x16', '7x8']:
         mwh = 0
-    elif (input_block == '2x16' and output_block in ['Wrap', '2x16', '7x24']):
+    elif input_block == '2x16' and output_block in ['Wrap', '2x16', '7x24']:
         mwh = 16 if is_weekend else 0
     # 7x8
-    elif (input_block == '7x8' and output_block in ['5x16', '2x16']):
+    elif input_block == '7x8' and output_block in ['5x16', '2x16']:
         mwh = 0
-    elif (input_block == '7x8' and output_block in ['7x8', 'Wrap']):
+    elif input_block == '7x8' and output_block in ['7x8', 'Wrap']:
         mwh = adjust_dst(flow_dt, 8)  # DST Check
-    elif (input_block == '1x1' and output_block == '7x24'):
+    elif input_block == '1x1' and output_block == '7x24':
         mwh = 1
-    elif (input_block == '1x1' and output_block == '5x16'):
+    elif input_block == '1x1' and output_block == '5x16':
         mwh = 1 if (is_peak and (7 <= flow_dt.hour <= 22)) else 0
-    elif (input_block == '1x1' and output_block == '2x16'):
+    elif input_block == '1x1' and output_block == '2x16':
         mwh = 1 if (not is_peak and (7 <= flow_dt.hour <= 22)) else 0
-    elif (input_block == '1x1' and output_block == 'Wrap' and is_weekend):
+    elif input_block == '1x1' and output_block == 'Wrap' and is_weekend:
         mwh = 1 if (not is_peak and (7 <= flow_dt.hour <= 22)) else 0
-    elif (input_block == '1x1' and output_block == 'Wrap' and not is_weekend):
+    elif input_block == '1x1' and output_block == 'Wrap' and not is_weekend:
         mwh = 1 if (not is_peak and ((flow_dt.hour < 7) or (flow_dt.hour > 22))) else 0  # No DST check, right?
-    elif (input_block == '1x1' and output_block == '7x8'):
+    elif input_block == '1x1' and output_block == '7x8':
         mwh = 1 if (not is_peak and ((flow_dt.hour < 7) or (flow_dt.hour > 22))) else 0  # No DST check, right?
-    elif (input_block == '7x16' and output_block == '5x16'):
+    elif input_block == '7x16' and output_block == '5x16':
         mwh = 16 if not is_weekend else 0
-    elif (input_block == '7x16' and output_block in ['2x16', 'Wrap']):
+    elif input_block == '7x16' and output_block in ['2x16', 'Wrap']:
         mwh = 16 if is_weekend else 0
-    elif (input_block == '7x16' and output_block == '7x24'):
+    elif input_block == '7x16' and output_block == '7x24':
         mwh = 16
-    elif (input_block == '7x16' and output_block == '7x8'):
+    elif input_block == '7x16' and output_block == '7x8':
         mwh = 0
     else:
         log.info('Input Block: {0}, Output Block: {1}'.format(input_block, output_block))
@@ -218,59 +217,59 @@ def convert(flow_dt, input_block, output_block):
 
     mwh = 0
     # 5x16
-    if (input_block == '5x16' and output_block in ['5x16', '7x24']):
+    if input_block == '5x16' and output_block in ['5x16', '7x24']:
         mwh = 16 if is_peak else 0
-    elif (input_block == '5x16' and output_block in ['2x16', '7x8', 'Wrap']):
+    elif input_block == '5x16' and output_block in ['2x16', '7x8', 'Wrap']:
         mwh = 0
     # Wrap
-    elif (input_block == 'Wrap' and output_block in ['Wrap', '7x24']):
+    elif input_block == 'Wrap' and output_block in ['Wrap', '7x24']:
         mwh = 8 if is_peak else adjust_dst(flow_dt, 24)  # DST Check
-    elif (input_block == 'Wrap' and output_block == '5x16'):
+    elif input_block == 'Wrap' and output_block == '5x16':
         mwh = 0
-    elif (input_block == 'Wrap' and output_block == '7x8'):
+    elif input_block == 'Wrap' and output_block == '7x8':
         mwh = 0 if is_peak else adjust_dst(flow_dt, 8)  # DST Check
-    elif (input_block == 'Wrap' and output_block == '2x16'):
+    elif input_block == 'Wrap' and output_block == '2x16':
         mwh = 16 if is_weekend else 0
     # 7x24
-    elif (input_block == '7x24' and output_block == '7x24'):
+    elif input_block == '7x24' and output_block == '7x24':
         mwh = adjust_dst(flow_dt, 24)  # DST Check
-    elif (input_block == '7x24' and output_block == '5x16'):
+    elif input_block == '7x24' and output_block == '5x16':
         mwh = 16 if is_peak else 0
-    elif (input_block == '7x24' and output_block == '2x16'):
+    elif input_block == '7x24' and output_block == '2x16':
         mwh = 16 if is_weekend else 0
-    elif (input_block == '7x24' and output_block == '7x8'):
+    elif input_block == '7x24' and output_block == '7x8':
         mwh = adjust_dst(flow_dt, 8) if not is_peak else 0  # DST Check
-    elif (input_block == '7x24' and output_block == 'Wrap'):
+    elif input_block == '7x24' and output_block == 'Wrap':
         mwh = adjust_dst(flow_dt, 24) if is_weekend else 8  # DST Check
     # 2x16
-    elif (input_block == '2x16' and output_block in ['5x16', '7x8']):
+    elif input_block == '2x16' and output_block in ['5x16', '7x8']:
         mwh = 0
-    elif (input_block == '2x16' and output_block in ['Wrap', '2x16', '7x24']):
+    elif input_block == '2x16' and output_block in ['Wrap', '2x16', '7x24']:
         mwh = 16 if is_weekend else 0
     # 7x8
-    elif (input_block == '7x8' and output_block in ['5x16', '2x16']):
+    elif input_block == '7x8' and output_block in ['5x16', '2x16']:
         mwh = 0
-    elif (input_block == '7x8' and output_block in ['7x8', 'Wrap']):
+    elif input_block == '7x8' and output_block in ['7x8', 'Wrap']:
         mwh = adjust_dst(flow_dt, 8)  # DST Check
-    elif (input_block == '1x1' and output_block == '7x24'):
+    elif input_block == '1x1' and output_block == '7x24':
         mwh = 1
-    elif (input_block == '1x1' and output_block == '5x16'):
+    elif input_block == '1x1' and output_block == '5x16':
         mwh = 1 if (is_peak and (7 <= flow_dt.hour <= 22)) else 0
-    elif (input_block == '1x1' and output_block == '2x16'):
+    elif input_block == '1x1' and output_block == '2x16':
         mwh = 1 if (not is_peak and (7 <= flow_dt.hour <= 22)) else 0
-    elif (input_block == '1x1' and output_block == 'Wrap' and is_weekend):
+    elif input_block == '1x1' and output_block == 'Wrap' and is_weekend:
         mwh = 1 if (not is_peak and (7 <= flow_dt.hour <= 22)) else 0
-    elif (input_block == '1x1' and output_block == 'Wrap' and not is_weekend):
+    elif input_block == '1x1' and output_block == 'Wrap' and not is_weekend:
         mwh = 1 if (not is_peak and ((flow_dt.hour < 7) or (flow_dt.hour > 22))) else 0  # No DST check, right?
-    elif (input_block == '1x1' and output_block == '7x8'):
+    elif input_block == '1x1' and output_block == '7x8':
         mwh = 1 if (not is_peak and ((flow_dt.hour < 7) or (flow_dt.hour > 22))) else 0  # No DST check, right?
-    elif (input_block == '7x16' and output_block == '5x16'):
+    elif input_block == '7x16' and output_block == '5x16':
         mwh = 16 if not is_weekend else 0
-    elif (input_block == '7x16' and output_block in ['2x16', 'Wrap']):
+    elif input_block == '7x16' and output_block in ['2x16', 'Wrap']:
         mwh = 16 if is_weekend else 0
-    elif (input_block == '7x16' and output_block == '7x24'):
+    elif input_block == '7x16' and output_block == '7x24':
         mwh = 16
-    elif (input_block == '7x16' and output_block == '7x8'):
+    elif input_block == '7x16' and output_block == '7x8':
         mwh = 0
     else:
         log.info('Input Block: {0}, Output Block: {1}'.format(input_block, output_block))
@@ -331,10 +330,10 @@ def get_blocks(as_of):
 
 
 def get_iso_details(iso):
-    if (iso in [Iso.AESO, Iso.ISONE, Iso.NYISO, Iso.PJM, Iso.MISO]):
+    if iso in [Iso.AESO, Iso.ISONE, Iso.NYISO, Iso.PJM, Iso.MISO]:
         first_peak_he = 8
         last_peak_he = 23
-    elif (iso in [Iso.ERCOT, Iso.SPP]):
+    elif iso in [Iso.ERCOT, Iso.SPP]:
         first_peak_he = 7
         last_peak_he = 22
     else:
@@ -392,12 +391,12 @@ def is_relevant_hour(block, iso, data_hour, flow_date):
             ret = True
 
     # Check DST Craziness, for hours that would otherwise be relevant
-    if (ret == True):
+    if ret:
         is_tx, short_day, long_day = is_dst_transition(flow_date)  # Look for DST Weirdness
-        if (is_tx and short_day and data_hour == 3):
+        if is_tx and short_day and data_hour == 3:
             log.info('Short Day: {0}, Short Hour: {1}'.format(flow_date.strftime('%Y-%m-%d'), data_hour))
             ret = False
-        elif (is_tx and long_day and data_hour == 2):
+        elif is_tx and long_day and data_hour == 2:
             log.info('Long Day: {0}, Long Hour: {1}'.format(flow_date.strftime('%Y-%m-%d'), data_hour))
             ret = True
             special = 'long'
@@ -440,7 +439,8 @@ def create_prices(flow_date, ticker, node, iso, block, frequency, input_prices):
     log.debug(input_prices)
     if input_prices.empty:
         raise InsufficientDataError(
-            'input_prices is empty. This method expects a DataFrame with 3 columns: flow_date (string in YYYY-MM-DD format), hour_ending (number), and price (number)')
+            'input_prices is empty. This method expects a DataFrame with 3 columns: flow_date (string in YYYY-MM-DD '
+            'format), hour_ending (number), and price (number)')
 
     # Translate input values to Enums
     iso = Iso(iso.lower())
@@ -481,7 +481,7 @@ def create_prices(flow_date, ticker, node, iso, block, frequency, input_prices):
         test_date = row['DHB'].date()
         hour_ending = row['HE']
 
-        expected = 2 if (row['Special'] != None) else 1  # We always expect 1 row of LMP data, except for long hour
+        expected = 2 if (row['Special'] is not None) else 1  # We always expect 1 row of LMP data, except for long hour
         # if((frequency == Frequency.Daily) and test_date.day == 1):
         #       import pdb; pdb.set_trace()
 
@@ -489,7 +489,7 @@ def create_prices(flow_date, ticker, node, iso, block, frequency, input_prices):
             input_prices.flow_date.eq(test_date.strftime('%Y-%m-%d')) & input_prices.hour_ending.eq(hour_ending)]
         x = raw['price'].to_list()  # Get array of prices from query (usually 1 row)
 
-        if (len(raw) != expected):
+        if len(raw) != expected:
             raise InsufficientDataError(
                 'Incorrect number of prices for {3}/{7}: {4} {5} {6} {0} HE {1}. Expected: {8}; Got: {2}. Stopping.'.format(
                     test_date.strftime('%Y-%m-%d'), str(hour_ending), len(raw), ticker, iso, block, frequency, node,
@@ -498,12 +498,12 @@ def create_prices(flow_date, ticker, node, iso, block, frequency, input_prices):
             # Update the value
             df.at[index, 'Value'] = x[0]
             # Add second value, as HE25, for the long hour
-            if (expected == 2):
+            if expected == 2:
                 df = df.append(
                     {'DHB': row['DHB'], 'HE': 25, 'Required': True, 'Value': x[1], 'Special': row['Special']},
                     ignore_index=True)
 
-    if (df.empty):
+    if df.empty:
         raise NoRelevantHoursTodayError(
             'No relevant hours on {0} for ticker {1}.'.format(flow_date.strftime('%Y-%m-%d'), ticker))
 
@@ -558,7 +558,7 @@ def scrub_hourly_prices(flow_date, ticker, node, iso, input_prices):
         test_date = row['DHB'].date()
         hour_ending = row['HE']
 
-        expected = 2 if (row['Special'] != None) else 1  # We always expect 1 row of LMP data, except for long hour
+        expected = 2 if (row['Special'] is not None) else 1  # We always expect 1 row of LMP data, except for long hour
         # if((frequency == Frequency.Daily) and test_date.day == 1):
         #       import pdb; pdb.set_trace()
 
@@ -566,7 +566,7 @@ def scrub_hourly_prices(flow_date, ticker, node, iso, input_prices):
             input_prices.flow_date.eq(test_date.strftime('%Y-%m-%d')) & input_prices.hour_ending.eq(hour_ending)]
         x = raw['price'].to_list()  # Get array of prices from query (usually 1 row)
 
-        if (len(raw) != expected):
+        if len(raw) != expected:
             raise InsufficientDataError(
                 'Incorrect number of prices for {3}/{7}: {4} {5} {6} {0} HE {1}. Expected: {8}; Got: {2}. Stopping.'.format(
                     test_date.strftime('%Y-%m-%d'), str(hour_ending), len(raw), ticker, iso, block, frequency, node,
@@ -575,7 +575,7 @@ def scrub_hourly_prices(flow_date, ticker, node, iso, input_prices):
             # Update the value
             df.at[index, 'Value'] = x[0]
             # Add second value, as HE25, for the long hour
-            if (expected == 2):
+            if expected == 2:
                 df = df.append(
                     {'DHB': row['DHB'], 'HE': 25, 'Required': True, 'Value': x[1], 'Special': row['Special']},
                     ignore_index=True)
