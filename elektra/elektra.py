@@ -266,7 +266,7 @@ def get_blocks(as_of):
     weekends = [5,6]
     if (as_of.weekday() in weekends) or (as_of.strftime('%m/%d/%Y') in holidays):
     """
-    nerc = HolidayCalendar('nerc')
+    nerc = HolidayCalendar('nerc') #TODO: Unresolved reference
     if not nerc.is_business_day(as_of):
         # return ['off_peak_weekends', 'atc']
         return ['off_peak_weekends', 'atc', 'off_peak_all', 'on_peak_all']
