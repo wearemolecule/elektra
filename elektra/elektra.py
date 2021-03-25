@@ -1,74 +1,20 @@
 import os
 import datetime as dt
 import calendar
-from enum import Enum
 import logging
 
 import pandas as pd
-from pandas.tseries.holiday import AbstractHolidayCalendar, Holiday, sunday_to_monday, \
-    USMemorialDay, USLaborDay, USThanksgivingDay
 from pytz import timezone
 from dateutil import tz
+
+from elektra.exceptions import InsufficientDataError, ElektraConfigError, NoRelevantHoursTodayError
+from elektra.utils import Iso, Block, Frequency, NERCHolidayCalendar
 
 # create the logger config
 log = logging.getLogger(__name__)
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"),
                     format='"%(asctime)s — %(name)s — %(levelname)s — %(funcName)s:%(lineno)d — %(message)s"')
 
-
-# CLASS DEFINITIONS BEGIN##
-class Iso(Enum):
-    MISO = 'miso'
-    ISONE = 'isone'
-    ERCOT = 'ercot'
-    PJM = 'pjm'
-    SPP = 'spp'
-    AESO = 'aeso'
-    NYISO = 'nyiso'
-    CAISO = 'caiso'
-
-
-class Block(Enum):
-    _7x8 = '7x8'
-    _5x16 = '5x16'
-    _2x16 = '2x16'
-    _7x24 = '7x24'
-    _7x16 = '7x16'
-    _1x1 = '1x1'
-    Wrap = 'wrap'
-
-
-class Frequency(Enum):
-    Daily = 'daily'
-    Monthly = 'monthly'
-    Hourly = 'hourly'
-
-
-class InsufficientDataError(Exception):
-    pass
-
-
-class ElektraConfigError(Exception):
-    pass
-
-
-class NoRelevantHoursTodayError(Exception):
-    pass
-
-
-# Defined at https://www.nerc.com/comm/OC/RS%20Agendas%20Highlights%20and%20Minutes%20DL/Additional_Off-peak_Days.pdf
-class NERCHolidayCalendar(AbstractHolidayCalendar):
-    rules = [
-        Holiday('NewYearsDay', month=1, day=1, observance=sunday_to_monday),
-        USMemorialDay,
-        Holiday('USIndependenceDay', month=7, day=4, observance=sunday_to_monday),
-        USLaborDay,
-        USThanksgivingDay,
-        Holiday('Christmas', month=12, day=25, observance=sunday_to_monday)
-    ]
-
-
-# CLASS DEFINITIONS END##
 
 # Static holder for NERC holiday calendar
 nhcal = {}
