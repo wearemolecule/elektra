@@ -112,3 +112,8 @@ venv.bak/
 .mypy_cache/
 
 *.crt
+
+#PyCharm
+.idea
+
+

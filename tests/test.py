@@ -1,9 +1,7 @@
 import unittest
 import elektra
 import pandas as pd
-import filecmp
 import datetime as dt
-import logging
 
 
 class ElektraTests(unittest.TestCase):
