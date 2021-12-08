@@ -257,7 +257,35 @@ def translateBlocks(iso, mw, frequency, contract_start, in_block, out_blocks, ou
 
     return df
 
+def _merge_two_blocks(month, blk_0_price, blk_1_price, from_blocks, iso):
+    '''Helper for merge_block_prices'''
+    df = translateBlocks(iso, 1, 'monthly', pd.to_datetime(month), '7x24', from_blocks, 'mwh')
+    blk_0_hrs = df[from_blocks[0]].sum()
+    blk_1_hrs = df[from_blocks[1]].sum()
+    total_px = (blk_0_price * blk_0_hrs + blk_1_price * blk_1_hrs) / (blk_0_hrs + blk_1_hrs)
+    return total_px
 
+def merge_block_prices(df, iso='pjm', to_block='7x24' ):
+    '''
+    Returns: a df with a strip of translated prices, weighted-averaged on the number of block-hours in the months
+    Input: a dataframe with strips of block pricing, plus iso and desired final block type
+
+    Example Input df:
+    Index      | 5x16  | Wrap
+    2021-12-01 | 73.35 ! 60.95
+    2022-01-01 | 91.85 | 68.10
+
+    Returns:
+    Index      | 5x16  | Wrap  | Total
+    2021-12-01 | 73.35 ! 60.95 | 67.0866
+    2022-01-01 | 91.85 | 68.10 | 78.8258
+    '''
+    from_blocks = df.columns.to_list()
+    df['Total'] = df.apply(lambda row: _merge_two_blocks(
+                        row.name, row[from_blocks[0]], row[from_blocks[1]], from_blocks, iso), axis=1
+                        )
+    return df
+  
 def get_blocks(as_of):
     """
         returns a list of blocks that are relevant for a given date
