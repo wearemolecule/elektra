@@ -119,7 +119,7 @@ def convert(flow_dt, input_block, output_block):
     elif input_block == '7x24' and output_block == '7x8':
         mwh = adjust_dst(flow_dt, 8) if not is_peak else 8  # DST Check
     elif input_block == '7x24' and output_block == 'Wrap':
-        mwh = adjust_dst(flow_dt, 24) if is_weekend else 8  # DST Check
+        mwh = adjust_dst(flow_dt, 24) if not is_peak else 8  # DST Check
     # 2x16
     elif input_block == '2x16' and output_block in ['5x16', '7x8']:
         mwh = 0
