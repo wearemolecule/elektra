@@ -23,6 +23,7 @@ class Block(Enum):
     _7x16 = '7x16'
     _1x1 = '1x1'
     Wrap = 'wrap'
+    _6x16 = '6x16'
 
 
 class Frequency(Enum):
