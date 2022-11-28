@@ -42,6 +42,16 @@ def is_weekend_day(as_of):
         return True
 
 
+def is_sunday(as_of):
+    return True if as_of.weekday() == 6 else False
+
+
+def is_nerc_holiday(as_of):
+    year_val = as_of.year
+    holidays = get_nerc_holidays(year_val)
+    return True if as_of.replace(hour=0, minute=0, second=0) in holidays else False
+
+
 def is_offpeak_day(as_of):
     as_of = pd.to_datetime(as_of)
     if is_weekend_day(as_of):
@@ -307,7 +317,7 @@ def get_iso_details(iso):
     if iso in [Iso.AESO, Iso.ISONE, Iso.NYISO, Iso.PJM, Iso.MISO]:
         first_peak_he = 8
         last_peak_he = 23
-    elif iso in [Iso.ERCOT, Iso.SPP]:
+    elif iso in [Iso.ERCOT, Iso.SPP, Iso.CAISO]:
         first_peak_he = 7
         last_peak_he = 22
     else:
@@ -350,16 +360,22 @@ def is_relevant_hour(block, iso, data_hour, flow_date):
     ret = False
     special = None
 
-    if block in [Block._5x16, Block._7x16, Block._2x16]:
+    if block in [Block._5x16, Block._7x16, Block._2x16, Block._6x16]:
         if first_peak <= data_hour <= last_peak:
             ret = True
     elif block in [Block._7x24, Block._1x1]:
         ret = True
     elif block in [Block.Wrap]:
-        if is_offpeak_day(flow_date):
-            ret = True
-        elif (data_hour < first_peak) or (data_hour > last_peak):
-            ret = True
+        if iso == Iso.CAISO:
+            if (is_sunday(as_of=flow_date) or is_nerc_holiday(as_of=flow_date)):
+                ret = True
+            elif (data_hour < first_peak) or (data_hour > last_peak):
+                ret = True
+        else:
+            if is_offpeak_day(flow_date):
+                ret = True
+            elif (data_hour < first_peak) or (data_hour > last_peak):
+                ret = True
     elif block in [Block._7x8]:
         if (data_hour < first_peak) or (data_hour > last_peak):
             ret = True
@@ -384,6 +400,8 @@ def is_relevant_day(block, iso, flow_date):
     elif block in [Block._7x8, Block._7x16, Block._7x24, Block.Wrap]:
         return True
     elif block in [Block._2x16] and is_offpeak_day(flow_date):
+        return True
+    elif block in [Block._6x16] and not (is_sunday(as_of=flow_date) or is_nerc_holiday(as_of=flow_date)):
         return True
     else:
         return False

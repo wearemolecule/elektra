@@ -18,7 +18,7 @@ class ElektraTests(unittest.TestCase):
 
     # call the create prices method and compare results
     result = elektra.create_prices(dt.datetime.strptime('2020-10-17','%Y-%m-%d'),'M.P4F8', 'INDIANA.HUB', 'miso','2x16','Daily', prices)
-    self.assertEqual(result,22.779374999999998)
+    self.assertEqual(result,22.55625)
 
   def test_scrub_price_method(self):
     # happy path test through the elektra scrub price method

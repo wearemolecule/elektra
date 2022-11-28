@@ -22,7 +22,7 @@ In your python project, `import elektra` and use away. Usage examples are in `ex
 Internally, Elektra uses enums for ISO, Block, and Frequency. String inputs for these fields are converted to the enum when Elektra runs, and so must be provided in the exact format the Enum expects.
 
 1. `iso`: permitted values are `miso`, `isone`, `ercot`, `pjm`, `spp`, `aeso`, `nyiso`, `caiso`
-2. `block`: permitted values are `7x8`, `5x16`, `2x16`, `7x24`, `7x16`, `1x1`, `wrap`
+2. `block`: permitted values are `7x8`, `5x16`, `2x16`, `7x24`, `7x16`, `1x1`, `wrap`, `6x16`
 3. `frequency`: permitted values are `daily`, `monthly`, `hourly`
 
 ## Methods
