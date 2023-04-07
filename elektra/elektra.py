@@ -100,8 +100,6 @@ def convert(flow_dt, input_block, output_block):
     # Is today a weekend or NERC holiday?
     is_peak = not is_offpeak_day(flow_dt)
 
-    # Is today just a weekend?
-    is_weekend = (is_weekend_day(flow_dt))
     log.debug("Flow Date: {0}, Input Block: {1}, Output Block: {2}".format(flow_dt, input_block, output_block))
 
     mwh = 0
@@ -118,14 +116,14 @@ def convert(flow_dt, input_block, output_block):
     elif input_block == 'Wrap' and output_block == '7x8':
         mwh = 8 if is_peak else adjust_dst(flow_dt, 8)  # DST Check
     elif input_block == 'Wrap' and output_block == '2x16':
-        mwh = 16 if is_weekend else 0
+        mwh = 16 if not is_peak else 0
     # 7x24
     elif input_block == '7x24' and output_block == '7x24':
         mwh = adjust_dst(flow_dt, 24)  # DST Check
     elif input_block == '7x24' and output_block == '5x16':
         mwh = 16 if is_peak else 0
     elif input_block == '7x24' and output_block == '2x16':
-        mwh = 16 if is_weekend else 0
+        mwh = 16 if not is_peak else 0
     elif input_block == '7x24' and output_block == '7x8':
         mwh = adjust_dst(flow_dt, 8) if not is_peak else 8  # DST Check
     elif input_block == '7x24' and output_block == 'Wrap':
@@ -134,7 +132,7 @@ def convert(flow_dt, input_block, output_block):
     elif input_block == '2x16' and output_block in ['5x16', '7x8']:
         mwh = 0
     elif input_block == '2x16' and output_block in ['Wrap', '2x16', '7x24']:
-        mwh = 16 if is_weekend else 0
+        mwh = 16 if not is_peak else 0
     # 7x8
     elif input_block == '7x8' and output_block in ['5x16', '2x16']:
         mwh = 0
@@ -146,83 +144,16 @@ def convert(flow_dt, input_block, output_block):
         mwh = 1 if (is_peak and (7 <= flow_dt.hour <= 22)) else 0
     elif input_block == '1x1' and output_block == '2x16':
         mwh = 1 if (not is_peak and (7 <= flow_dt.hour <= 22)) else 0
-    elif input_block == '1x1' and output_block == 'Wrap' and is_weekend:
-        mwh = 1 if (not is_peak and (7 <= flow_dt.hour <= 22)) else 0
-    elif input_block == '1x1' and output_block == 'Wrap' and not is_weekend:
-        mwh = 1 if (not is_peak and ((flow_dt.hour < 7) or (flow_dt.hour > 22))) else 0  # No DST check, right?
-    elif input_block == '1x1' and output_block == '7x8':
-        mwh = 1 if (not is_peak and ((flow_dt.hour < 7) or (flow_dt.hour > 22))) else 0  # No DST check, right?
-    elif input_block == '7x16' and output_block == '5x16':
-        mwh = 16 if not is_weekend else 0
-    elif input_block == '7x16' and output_block in ['2x16', 'Wrap']:
-        mwh = 16 if is_weekend else 0
-    elif input_block == '7x16' and output_block == '7x24':
-        mwh = 16
-    elif input_block == '7x16' and output_block == '7x8':
-        mwh = 0
-    else:
-        log.info('Input Block: {0}, Output Block: {1}'.format(input_block, output_block))
-        raise ElektraConfigError('Conversion Not Supported!')
-
-    return mwh
-    # Is today a weekend or NERC holiday?
-    is_peak = not is_offpeak_day(flow_dt)
-
-    # Is today just a weekend?
-    is_weekend = (is_weekend_day(flow_dt))
-
-    mwh = 0
-    # 5x16
-    if input_block == '5x16' and output_block in ['5x16', '7x24']:
-        mwh = 16 if is_peak else 0
-    elif input_block == '5x16' and output_block in ['2x16', '7x8', 'Wrap']:
-        mwh = 0
-    # Wrap
-    elif input_block == 'Wrap' and output_block in ['Wrap', '7x24']:
-        mwh = 8 if is_peak else adjust_dst(flow_dt, 24)  # DST Check
-    elif input_block == 'Wrap' and output_block == '5x16':
-        mwh = 0
-    elif input_block == 'Wrap' and output_block == '7x8':
-        mwh = 0 if is_peak else adjust_dst(flow_dt, 8)  # DST Check
-    elif input_block == 'Wrap' and output_block == '2x16':
-        mwh = 16 if is_weekend else 0
-    # 7x24
-    elif input_block == '7x24' and output_block == '7x24':
-        mwh = adjust_dst(flow_dt, 24)  # DST Check
-    elif input_block == '7x24' and output_block == '5x16':
-        mwh = 16 if is_peak else 0
-    elif input_block == '7x24' and output_block == '2x16':
-        mwh = 16 if is_weekend else 0
-    elif input_block == '7x24' and output_block == '7x8':
-        mwh = adjust_dst(flow_dt, 8) if not is_peak else 0  # DST Check
-    elif input_block == '7x24' and output_block == 'Wrap':
-        mwh = adjust_dst(flow_dt, 24) if is_weekend else 8  # DST Check
-    # 2x16
-    elif input_block == '2x16' and output_block in ['5x16', '7x8']:
-        mwh = 0
-    elif input_block == '2x16' and output_block in ['Wrap', '2x16', '7x24']:
-        mwh = 16 if is_weekend else 0
-    # 7x8
-    elif input_block == '7x8' and output_block in ['5x16', '2x16']:
-        mwh = 0
-    elif input_block == '7x8' and output_block in ['7x8', 'Wrap']:
-        mwh = adjust_dst(flow_dt, 8)  # DST Check
-    elif input_block == '1x1' and output_block == '7x24':
+    elif input_block == '1x1' and output_block == 'Wrap' and not is_peak:
         mwh = 1
-    elif input_block == '1x1' and output_block == '5x16':
-        mwh = 1 if (is_peak and (7 <= flow_dt.hour <= 22)) else 0
-    elif input_block == '1x1' and output_block == '2x16':
-        mwh = 1 if (not is_peak and (7 <= flow_dt.hour <= 22)) else 0
-    elif input_block == '1x1' and output_block == 'Wrap' and is_weekend:
-        mwh = 1 if (not is_peak and (7 <= flow_dt.hour <= 22)) else 0
-    elif input_block == '1x1' and output_block == 'Wrap' and not is_weekend:
-        mwh = 1 if (not is_peak and ((flow_dt.hour < 7) or (flow_dt.hour > 22))) else 0  # No DST check, right?
+    elif input_block == '1x1' and output_block == 'Wrap' and is_peak:
+        mwh = 1 if (flow_dt.hour < 7) or (flow_dt.hour > 22) else 0  # No DST check, right?
     elif input_block == '1x1' and output_block == '7x8':
         mwh = 1 if (not is_peak and ((flow_dt.hour < 7) or (flow_dt.hour > 22))) else 0  # No DST check, right?
     elif input_block == '7x16' and output_block == '5x16':
-        mwh = 16 if not is_weekend else 0
+        mwh = 16 if is_peak else 0
     elif input_block == '7x16' and output_block in ['2x16', 'Wrap']:
-        mwh = 16 if is_weekend else 0
+        mwh = 16 if not is_peak else 0
     elif input_block == '7x16' and output_block == '7x24':
         mwh = 16
     elif input_block == '7x16' and output_block == '7x8':
@@ -232,6 +163,7 @@ def convert(flow_dt, input_block, output_block):
         raise ElektraConfigError('Conversion Not Supported!')
 
     return mwh
+
 
 
 def translateBlocks(iso, mw, frequency, contract_start, in_block, out_blocks, out_uom):
