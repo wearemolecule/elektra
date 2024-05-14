@@ -1,0 +1,126 @@
+{
+    "as_of": "2024-05-13",
+    "flow_date": "2024-03-10",
+    "ticker": "E.4MYV.DADL9",
+    "node": "ISONE MASS HUB",
+    "iso": "iso_ne",
+    "block": "Wrap",
+    "frequency": "Daily",
+    "data": [
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 1,
+            "price": "20.43"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 2,
+            "price": "17.51"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 3,
+            "price": "17.38"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 4,
+            "price": "16.92"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 5,
+            "price": "17.74"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 6,
+            "price": "18.07"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 7,
+            "price": "20.0"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 8,
+            "price": "19.86"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 9,
+            "price": "21.69"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 10,
+            "price": "21.82"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 11,
+            "price": "20.7"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 12,
+            "price": "20.76"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 13,
+            "price": "19.88"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 14,
+            "price": "20.1"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 15,
+            "price": "19.38"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 16,
+            "price": "20.29"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 17,
+            "price": "28.96"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 18,
+            "price": "31.46"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 19,
+            "price": "33.61"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 20,
+            "price": "32.95"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 21,
+            "price": "29.85"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 22,
+            "price": "21.55"
+        },
+        {
+            "flow_date": "2024-03-10",
+            "hour_ending": 23,
+            "price": "20.86"
+        }
+    ]
+}
