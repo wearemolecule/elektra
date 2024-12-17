@@ -402,7 +402,13 @@ def create_prices(flow_date, ticker, node, iso, block, frequency, input_prices):
     if is_dst_transition(as_of=flow_date)[1] and input_prices.hour_ending.size == 23 and pd.to_numeric(input_prices.hour_ending).max() == 23:
         log.info('input prices need to be adjusted to skip hour 3')
         input_prices.loc[:, 'hour_ending'] = input_prices.hour_ending.map(lambda he: he + 1 if he > 2 else he)
-
+    
+    # if the flow date is the end of daylight savings and there are 25 unique hour ending values
+    # adjust hours 3..25 so the result is hours 1, 2, 2..24
+    if is_dst_transition(as_of=flow_date)[2] and input_prices.hour_ending.unique().size == 25:
+        log.info('input prices need to be adjusted to duplicate hour 2')
+        input_prices.loc[:, 'hour_ending'] = input_prices.hour_ending.map(lambda he: he - 1 if he > 2 else he)
+            
     # Fill required hours table with data. Barf if we're missing something.
     # Nice-to-have: Fill it backwards (because it's more likely we won't have the ending settles)
     # df.to_csv('outputs/required - '+ticker+'.csv')
@@ -485,6 +491,12 @@ def scrub_hourly_prices(flow_date, ticker, node, iso, input_prices):
     if is_dst_transition(as_of=flow_date)[1] and input_prices.hour_ending.size == 23 and pd.to_numeric(input_prices.hour_ending).max() == 23:
         log.info('input prices need to be adjusted to skip hour 3')
         input_prices.loc[:, 'hour_ending'] = input_prices.hour_ending.map(lambda he: he + 1 if he > 2 else he)
+    
+    # if the flow date is the end of daylight savings and there are 25 unique hour ending values
+    # adjust hours 3..25 so the result is hours 1, 2, 2..24    
+    if is_dst_transition(as_of=flow_date)[2] and input_prices.hour_ending.unique().size == 25:
+        log.info('input prices need to be adjusted to duplicate hour 2')
+        input_prices.loc[:, 'hour_ending'] = input_prices.hour_ending.map(lambda he: he - 1 if he > 2 else he)
     
     # Fill required hours table with data. Barf if we're missing something.
     # Nice-to-have: Fill it backwards (because it's more likely we won't have the ending settles)
